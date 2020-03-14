@@ -17,6 +17,17 @@ typedef struct _categorias {
 } Categorias;
 
 /**
+ * Estrutura que guarda as Categorias e suas frequências calculadas por ordem crescente de Frequência Absoluta
+ * Utilizada no Ex. 2
+ */
+typedef struct _auxCategoriasOrdenadas {
+    char *nome;
+    int frequenciaAbsoluta;
+    float frequenciaRelativa;
+    struct _auxCategoriasOrdenadas *next;
+} AuxCategoriasOrdenadas;
+
+/**
  * Estrutura que guarda a quantidade de palavras com um número expecífico de letras
  * Utilizada no Ex. 3 e Ex. 5
  */
@@ -129,6 +140,31 @@ Categorias *InserirCategoria(Categorias *listaCategorias, char *nome, float cert
 }
 
 /**
+ * Função que insere Categorias ordenadas por Freqência Absoluta de forma crescente
+ * @param listaAuxCategoriasOrdenadas -> lista de Categorias ordenadas existentes
+ * @param nome -> nome a inserir
+ * @param frequenciaAbsoluta -> Frequência Absoluta a inserir
+ * @param frequenciaRelativa -> Frequência Relativa a inserir
+ * @return -> lista de Categorias Ordenadas atualizada
+ */
+AuxCategoriasOrdenadas *
+InserirCategoriaOrdenada(AuxCategoriasOrdenadas *listaAuxCategoriasOrdenadas, char *nome, int frequenciaAbsoluta,
+                         float frequenciaRelativa) {
+    if (!listaAuxCategoriasOrdenadas || listaAuxCategoriasOrdenadas->frequenciaAbsoluta >= frequenciaAbsoluta) {
+        AuxCategoriasOrdenadas *node = MALLOC(AuxCategoriasOrdenadas);
+        node->nome = strdup(nome);
+        node->frequenciaAbsoluta = frequenciaAbsoluta;
+        node->frequenciaRelativa = frequenciaRelativa;
+        node->next = listaAuxCategoriasOrdenadas;
+        listaAuxCategoriasOrdenadas = node;
+    } else {
+        listaAuxCategoriasOrdenadas->next = InserirCategoriaOrdenada(listaAuxCategoriasOrdenadas->next, nome,
+                                                                     frequenciaAbsoluta, frequenciaRelativa);
+    }
+    return listaAuxCategoriasOrdenadas;
+}
+
+/**
  * Função que insere/atualiza Frequencia de Letras
  * @param listaFrequenciaLetras -> lista de Frequencia de Letras existentes
  * @param numeroLetras -> numero de letras a inserir/atualizar
@@ -170,7 +206,7 @@ FrequenciaPalavras *InserirFrequenciaPalavras(FrequenciaPalavras *listaFrequenci
 
 /**
  * Função que insere/atualiza Frequencia de Certezas
- * @param listaFrequenciaCerteza ->lista de Frequencia de Certezas existentes
+ * @param listaFrequenciaCerteza -> lista de Frequencia de Certezas existentes
  * @param certeza -> certeza a inserir/atualizar
  * @return -> lista de Frequencia de Certezas atualizada
  */
@@ -189,16 +225,45 @@ FrequenciaCertezas *InserirFrequenciaCerteza(FrequenciaCertezas *listaFrequencia
 }
 
 /**
- * Procedimento que lista as Palavras
+ * Função que calcula a soma de todas as quantidades de Categorias
+ * @param listaCategorias -> lista de Categorias a somar
+ * @return -> quantidades de Categorias somadas
+ */
+int TotalQuantidadesCategorias(Categorias *listaCategorias) {
+    int totalQuantidadesCategorias = 0;
+    while (listaCategorias) {
+        totalQuantidadesCategorias += listaCategorias->quantidade;
+        listaCategorias = listaCategorias->next;
+    }
+    return totalQuantidadesCategorias;
+}
+
+/**
+ * Procedimento que lista as Categorias ordenadas por ordem crescente de Frequência Absoluta
+ * Calcula a Frequência Absoluta, Relativa e Acumulada
  * @param palavras -> lista de Palavras
  */
 void ListarCategorias(Categorias *listaCategorias) {
     printf("\n\n----- LISTA DE CATEGORIAS -----\n\n");
+    AuxCategoriasOrdenadas *listaCategoriasOrdenadas = NULL;
+    int totalQuantidadesCategorias = TotalQuantidadesCategorias(listaCategorias);
     while (listaCategorias) {
-        printf("Nome: %s\n", listaCategorias->nome);
-        printf("Total Certeza: %f\n", listaCategorias->totalCerteza);
-        printf("Quantidade: %d\n\n", listaCategorias->quantidade);
+        listaCategoriasOrdenadas = InserirCategoriaOrdenada(listaCategoriasOrdenadas, listaCategorias->nome,
+                                                            listaCategorias->quantidade,
+                                                            (((float) listaCategorias->quantidade /
+                                                              (float) totalQuantidadesCategorias) * 100));
         listaCategorias = listaCategorias->next;
+    }
+    int frequenciaAcumulada = 0;
+    while (listaCategoriasOrdenadas) {
+        printf("\nNome: %s\n", listaCategoriasOrdenadas->nome);
+        printf("Frequência Absoluta: %d\n", listaCategoriasOrdenadas->frequenciaAbsoluta);
+        printf("Frequência Relativa: %.2f\n", listaCategoriasOrdenadas->frequenciaRelativa);
+        printf("Frequência Acumulada: %d\n", frequenciaAcumulada += listaCategoriasOrdenadas->frequenciaAbsoluta);
+        AuxCategoriasOrdenadas *next = listaCategoriasOrdenadas->next;
+        free(listaCategoriasOrdenadas->nome);
+        free(listaCategoriasOrdenadas);
+        listaCategoriasOrdenadas = next;
     }
 }
 
@@ -287,7 +352,7 @@ int main() {
                 *aux = '\0';
 //                printf(" | Certeza: \"%f\"", atof(aux4)); //Imprime a certeza
 
-//                listaCategorias = InserirCategoria(listaCategorias, aux3, atof(aux4));
+                listaCategorias = InserirCategoria(listaCategorias, aux3, atof(aux4));
 //                listaFrequenciaLetras = InserirFrequenciaLetra(listaFrequenciaLetras, strlen(line));
 //                listaFrequenciaPalavras = InserirFrequenciaPalavras(listaFrequenciaPalavras, line);
 //                listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, atof(aux4));
@@ -298,7 +363,7 @@ int main() {
             }
         }
     }
-//    ListarCategorias(listaCategorias);
+    ListarCategorias(listaCategorias);
 //    ListarFrequenciaLetras(listaFrequenciaLetras);
 //    ListarFrequenciaPalavras(listaFrequenciaPalavras);
 //    ListarFrequenciaCertezas(listaFrequenciaCertezas);

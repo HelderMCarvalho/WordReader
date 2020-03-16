@@ -185,7 +185,6 @@ InserirCategoriaOrdenada(AuxCategoriasOrdenadas *listaAuxCategoriasOrdenadas, ch
  * @return -> lista de Frequencia de Letras atualizada
  */
 FrequenciaLetras *InserirFrequenciaLetraOrdenada(FrequenciaLetras *listaFrequenciaLetras, int numeroLetras) {
-
     FrequenciaLetras *aux = ProcurarFrequenciaLetras(listaFrequenciaLetras, numeroLetras);
     if (aux) {
         aux->quantidade++;
@@ -255,6 +254,11 @@ int TotalQuantidadesCategorias(Categorias *listaCategorias) {
     return totalQuantidadesCategorias;
 }
 
+/**
+ * Função que calcula a soma a quantidade total de letras de todas as palavras do ficheiro
+ * @param listaFrequenciaLetras -> lista de Frequência de Letras a somar
+ * @return -> quantidade total de letras
+ */
 int TotalQuantidadesLetras(FrequenciaLetras *listaFrequenciaLetras) {
     int totalQuantidadesLetras = 0;
     while (listaFrequenciaLetras) {
@@ -305,8 +309,9 @@ void ListarCategorias(Categorias *listaCategorias) {
 }
 
 /**
- * Procedimento que lista as Frequêcias de Letras
+Procedimento que lista as Frequêcias de Letras
  * @param listaFrequenciaLetras -> lista de Frequências de Letras
+ * @param totalPalavras -> total de palavras existentes no ficheiro
  */
 void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras, int totalPalavras) {
     int frequenciaAcumulada = 0, posInicial = 0, moda = 0, modaQtd = 0, *auxMediana = NULL,
@@ -387,7 +392,7 @@ int main() {
     FrequenciaPalavras *listaFrequenciaPalavras = NULL;
     FrequenciaCertezas *listaFrequenciaCertezas = NULL;
 
-    FILE *ficheiro = fopen("../dados", "r");
+    FILE *ficheiro = fopen("../dadosMini", "r");
     if (!ficheiro) {
         printf("Não foi possível abrir o ficheiro!\n");
         perror("fopen");
@@ -427,10 +432,10 @@ int main() {
                 *aux = '\0';
 //                printf(" | Certeza: \"%f\"", atof(aux4)); //Imprime a certeza
 
-//                listaCategorias = InserirCategoria(listaCategorias, aux3, atof(aux4));
+                listaCategorias = InserirCategoria(listaCategorias, aux3, atof(aux4));
                 listaFrequenciaLetras = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras, strlen(line));
-//                listaFrequenciaPalavras = InserirFrequenciaPalavras(listaFrequenciaPalavras, line);
-//                listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, atof(aux4));
+                listaFrequenciaPalavras = InserirFrequenciaPalavras(listaFrequenciaPalavras, line);
+                listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, atof(aux4));
 
                 free(aux2);
                 free(aux3);
@@ -440,52 +445,34 @@ int main() {
         }
     }
 
-//    do{
-    printf("Ex2\n");
-    printf("Ex3\n");
-    printf("Ex4\n");
-    printf("Ex5\n");
-    printf("Ex6\n");
-    printf("Ex7\n");
-    printf("Exit = 0\n");
+    do {
+        printf("\n\n ----- MENU -----\n\n");
+        printf("\t1 -> Ex. 2 e 4\n");
+        printf("\t2 -> Ex. 3 e 5\n");
+        printf("\t3 -> Ex. 6\n");
+        printf("\t4 -> Ex. 7\n");
+        printf("\t0 -> Sair\n");
+        printf("\tEscolha a sua opção: ");
+        scanf("%d", &op);
+        switch (op) {
+            case 1:
+                ListarCategorias(listaCategorias);
+                break;
+            case 2:
+                ListarFrequenciaLetras(listaFrequenciaLetras, palavrasCount);
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 0:
+                exit(1);
+            default:
+                printf("Opcao invalida");
+        }
 
-    printf("Escolha o numero do exercicio\nR: ");
-    scanf("%d", &op);
-    printf("%d", op);
-
-    switch (op) {
-        case 2:
-            ListarCategorias(listaCategorias);
-            break;
-        case 3:
-            ListarFrequenciaLetras(listaFrequenciaLetras, palavrasCount);
-            break;
-        case 4:
-            ListarCategorias(listaCategorias);
-            break;
-        case 5:
-            ListarFrequenciaLetras(listaFrequenciaLetras, palavrasCount);
-            break;
-        case 6:
-            break;
-        case 7:
-            break;
-        case 0:
-            break;
-        default:
-            printf("Opcao invalida");
-
-    }
-
-//    }while (op != 0);
-
-//    ListarFrequenciaPalavras(listaFrequenciaPalavras);
-//    ListarFrequenciaCertezas(listaFrequenciaCertezas);
-
+    } while (op != 0);
 //    char s;
 //    scanf("%c", &s);
-
     return 0;
 }
-
-

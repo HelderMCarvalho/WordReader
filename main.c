@@ -184,16 +184,19 @@ InserirCategoriaOrdenada(AuxCategoriasOrdenadas *listaAuxCategoriasOrdenadas, ch
  * @param numeroLetras -> numero de letras a inserir/atualizar
  * @return -> lista de Frequencia de Letras atualizada
  */
-FrequenciaLetras *InserirFrequenciaLetra(FrequenciaLetras *listaFrequenciaLetras, int numeroLetras) {
+FrequenciaLetras *InserirFrequenciaLetraOrdenada(FrequenciaLetras *listaFrequenciaLetras, int numeroLetras) {
+
     FrequenciaLetras *aux = ProcurarFrequenciaLetras(listaFrequenciaLetras, numeroLetras);
     if (aux) {
         aux->quantidade++;
-    } else {
+    } else if (!listaFrequenciaLetras || listaFrequenciaLetras->numeroLetras >= numeroLetras) {
         FrequenciaLetras *node = MALLOC(FrequenciaLetras);
         node->numeroLetras = numeroLetras;
         node->quantidade = 1;
         node->next = listaFrequenciaLetras;
-        return node;
+        listaFrequenciaLetras = node;
+    } else {
+        listaFrequenciaLetras->next = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras->next, numeroLetras);
     }
     return listaFrequenciaLetras;
 }
@@ -252,6 +255,16 @@ int TotalQuantidadesCategorias(Categorias *listaCategorias) {
     return totalQuantidadesCategorias;
 }
 
+int TotalQuantidadesLetras(FrequenciaLetras *listaFrequenciaLetras) {
+    int totalQuantidadesLetras = 0;
+    while (listaFrequenciaLetras) {
+        totalQuantidadesLetras += listaFrequenciaLetras->quantidade * listaFrequenciaLetras->numeroLetras;
+        listaFrequenciaLetras = listaFrequenciaLetras->next;
+    }
+    return totalQuantidadesLetras;
+}
+
+
 /**
  * Ex. 2 e Ex. 4
  * Procedimento que lista as Categorias ordenadas por ordem crescente de Frequência Absoluta
@@ -295,13 +308,49 @@ void ListarCategorias(Categorias *listaCategorias) {
  * Procedimento que lista as Frequêcias de Letras
  * @param listaFrequenciaLetras -> lista de Frequências de Letras
  */
-void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras) {
+void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras, int totalPalavras) {
+    int frequenciaAcumulada = 0, posInicial = 0, moda = 0, modaQtd = 0, *auxMediana = NULL,
+            totalLetras = TotalQuantidadesLetras(listaFrequenciaLetras);
+    float frequenciaRelativa = 0, auxMedia = 0, mediana = 0, auxDesvioPadrao = 0;
+
+    auxMediana = malloc(sizeof(int) * totalPalavras);
+
     printf("\n\n----- LISTA DE FREQUÊNCIA DE LETRAS -----\n\n");
-    while (listaFrequenciaLetras) {
-        printf("Número de Letras: %d\n", listaFrequenciaLetras->numeroLetras);
-        printf("Quantidade: %d\n\n", listaFrequenciaLetras->quantidade);
+    float mediaLetras = (float) totalLetras / (float) totalPalavras;
+    while (listaFrequenciaLetras) { // Moda
+        if (modaQtd < listaFrequenciaLetras->quantidade) {
+            modaQtd = listaFrequenciaLetras->quantidade;
+            moda = listaFrequenciaLetras->numeroLetras;
+        }
+
+        auxMedia += (float) listaFrequenciaLetras->numeroLetras * (float) listaFrequenciaLetras->quantidade;   //Media
+        for (int i = posInicial; i < (listaFrequenciaLetras->quantidade + posInicial); i++) {
+            auxMediana[i] = listaFrequenciaLetras->numeroLetras;
+            auxDesvioPadrao += quadrado((float) listaFrequenciaLetras->numeroLetras - mediaLetras);
+        }
+        posInicial += listaFrequenciaLetras->quantidade;
+
+        frequenciaRelativa = (((float) listaFrequenciaLetras->quantidade / (float) totalPalavras)) * 100;
+        printf("\nNúmero de Letras: %d\n", listaFrequenciaLetras->numeroLetras);
+        printf("\tFrequência Absoluta: %d\n", listaFrequenciaLetras->quantidade);
+        printf("\tFrequência Relativa: %.2f%c\n", frequenciaRelativa, '%');
+        printf("\tFrequência Acumulada: %d\n", frequenciaAcumulada += listaFrequenciaLetras->quantidade);
         listaFrequenciaLetras = listaFrequenciaLetras->next;
     }
+
+    // Calculo da mediana
+    if (totalPalavras % 2 != 0) {
+        // Numero do meio
+        mediana = (float) auxMediana[(int) (totalPalavras / 2)];
+    } else {
+        // Divisão entre os dois numeros do meio :D
+        mediana = (float) (auxMediana[(int) ((totalPalavras - 1) / 2)] + auxMediana[(int) (totalPalavras / 2)]) / 2;
+    }
+
+    printf("\nMedia: %.2f", auxMedia / (float) totalPalavras);
+    printf("\nMediana: %.2f", mediana);
+    printf("\nModa: %d", moda);
+    printf("\nDesvio Padrao: %f", sqrtf(auxDesvioPadrao / (float) totalLetras));
 }
 
 /**
@@ -331,12 +380,14 @@ void ListarFrequenciaCertezas(FrequenciaCertezas *listaFrequenciaCertezas) {
 }
 
 int main() {
+    int op = -1;
+    int palavrasCount = 0;
     Categorias *listaCategorias = NULL;
     FrequenciaLetras *listaFrequenciaLetras = NULL;
     FrequenciaPalavras *listaFrequenciaPalavras = NULL;
     FrequenciaCertezas *listaFrequenciaCertezas = NULL;
 
-    FILE *ficheiro = fopen("../dadosMini", "r");
+    FILE *ficheiro = fopen("../dados", "r");
     if (!ficheiro) {
         printf("Não foi possível abrir o ficheiro!\n");
         perror("fopen");
@@ -377,18 +428,57 @@ int main() {
 //                printf(" | Certeza: \"%f\"", atof(aux4)); //Imprime a certeza
 
 //                listaCategorias = InserirCategoria(listaCategorias, aux3, atof(aux4));
-//                listaFrequenciaLetras = InserirFrequenciaLetra(listaFrequenciaLetras, strlen(line));
+                listaFrequenciaLetras = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras, strlen(line));
 //                listaFrequenciaPalavras = InserirFrequenciaPalavras(listaFrequenciaPalavras, line);
 //                listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, atof(aux4));
 
                 free(aux2);
                 free(aux3);
                 free(aux4);
+                palavrasCount++;
             }
         }
     }
-//    ListarCategorias(listaCategorias);
-//    ListarFrequenciaLetras(listaFrequenciaLetras);
+
+//    do{
+    printf("Ex2\n");
+    printf("Ex3\n");
+    printf("Ex4\n");
+    printf("Ex5\n");
+    printf("Ex6\n");
+    printf("Ex7\n");
+    printf("Exit = 0\n");
+
+    printf("Escolha o numero do exercicio\nR: ");
+    scanf("%d", &op);
+    printf("%d", op);
+
+    switch (op) {
+        case 2:
+            ListarCategorias(listaCategorias);
+            break;
+        case 3:
+            ListarFrequenciaLetras(listaFrequenciaLetras, palavrasCount);
+            break;
+        case 4:
+            ListarCategorias(listaCategorias);
+            break;
+        case 5:
+            ListarFrequenciaLetras(listaFrequenciaLetras, palavrasCount);
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
+        case 0:
+            break;
+        default:
+            printf("Opcao invalida");
+
+    }
+
+//    }while (op != 0);
+
 //    ListarFrequenciaPalavras(listaFrequenciaPalavras);
 //    ListarFrequenciaCertezas(listaFrequenciaCertezas);
 
@@ -397,3 +487,5 @@ int main() {
 
     return 0;
 }
+
+

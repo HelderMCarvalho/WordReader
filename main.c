@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "helpers.c"
-#include "Categorias.c"
-#include "FrequenciaLetras.c"
-#include "FrequenciaPalavras.c"
-#include "FrequenciaCertezas.c"
+#include "./Partials/helpers.c"
+#include "./Partials/Categorias.c"
+#include "./Partials/FrequenciaLetras.c"
+#include "./Partials/FrequenciaPalavras.c"
+#include "./Partials/FrequenciaCertezas.c"
 
 int main() {
     int op = -1;

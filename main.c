@@ -18,7 +18,7 @@ int main() {
     FrequenciaPalavras *listaFrequenciaPalavras = NULL;
     FrequenciaCertezas *listaFrequenciaCertezas = NULL;
 
-    FILE *ficheiro = fopen("../dadosMini", "r");
+    FILE *ficheiro = fopen("../Dados/mini", "r");
     if (!ficheiro) {
         printf("Não foi possível abrir o ficheiro!\n");
         perror("fopen");

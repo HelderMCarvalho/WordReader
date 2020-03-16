@@ -69,9 +69,7 @@ void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras, int totalPa
     int frequenciaAcumulada = 0, posInicial = 0, moda = 0, modaQtd = 0, *auxMediana = NULL,
             totalLetras = TotalQuantidadesLetras(listaFrequenciaLetras);
     float frequenciaRelativa = 0, auxMedia = 0, mediana = 0, auxDesvioPadrao = 0;
-
     auxMediana = malloc(sizeof(int) * totalPalavras);
-
     printf("\n\n----- LISTA DE FREQUÊNCIA DE LETRAS -----\n\n");
     float mediaLetras = (float) totalLetras / (float) totalPalavras;
     while (listaFrequenciaLetras) { // Moda

@@ -31,7 +31,7 @@ typedef struct _auxCategoriasOrdenadas {
 Categorias *ProcurarCategoria(Categorias *listaCategorias, char *nome) {
     if (!listaCategorias) {
         return NULL;
-    } else if (strcasecmp(nome, listaCategorias->nome) == 0) {
+    } else if (strcmp(nome, listaCategorias->nome) == 0) {
         return listaCategorias;
     }
     return ProcurarCategoria(listaCategorias->next, nome);

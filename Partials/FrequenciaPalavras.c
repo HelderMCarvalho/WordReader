@@ -15,13 +15,13 @@ typedef struct _frequenciaPalavras {
  * @return -> FrequenciaPalavras caso encontre || NULL caso não encontre
  */
 FrequenciaPalavras *
-ProcurarFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, char *palavra, int tamanho) {
+ProcurarFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, char *palavra) {
     if (!listaFrequenciaPalavras) {
         return NULL;
-    } else if (strcasecmp(palavra, listaFrequenciaPalavras->palavra) == 0) { //todo: comparação demora muuuuuuuuuito
+    } else if (strcmp(palavra, listaFrequenciaPalavras->palavra) == 0) { //todo: comparação demora muuuuuuuuuito
         return listaFrequenciaPalavras;
     }
-    return ProcurarFrequenciaPalavras(listaFrequenciaPalavras->next, palavra, tamanho);
+    return ProcurarFrequenciaPalavras(listaFrequenciaPalavras->next, palavra);
 }
 
 /**
@@ -31,7 +31,7 @@ ProcurarFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, char *pa
  * @return -> lista de Frequencia de Palavras atualizada
  */
 FrequenciaPalavras *InserirFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, char *palavra) {
-    FrequenciaPalavras *aux = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra, (int) strlen(palavra));
+    FrequenciaPalavras *aux = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
     if (aux) {
         aux->quantidade++;
     } else {

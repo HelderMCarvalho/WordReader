@@ -11,7 +11,7 @@
 #include "./Partials/FrequenciaCertezas.c"
 
 int main() {
-    int op = -1, totalPalavrasCategorias = 0, totalLetras = 0;
+    int op = -1, totalPalavrasCategorias = 0, totalLetras = 0, tamanhoPalavra;
     Categorias *listaCategorias = NULL;
     FrequenciaLetras *listaFrequenciaLetras = NULL;
     FrequenciaPalavras *listaFrequenciaPalavras = NULL;
@@ -57,12 +57,14 @@ int main() {
                 *aux = '\0';
 //                printf(" | Certeza: \"%f\"", atof(aux4)); //Imprime a certeza
 
+                tamanhoPalavra = (int) strlen(line);
+
                 listaCategorias = InserirCategoria(listaCategorias, aux3, atof(aux4));
-                listaFrequenciaLetras = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras, strlen(line));
+                listaFrequenciaLetras = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras, tamanhoPalavra);
                 listaFrequenciaPalavras = InserirFrequenciaPalavras(listaFrequenciaPalavras, line);
                 listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, atof(aux4));
                 totalPalavrasCategorias++;
-                totalLetras += (int) strlen(line);
+                totalLetras += tamanhoPalavra;
 
                 free(aux2);
                 free(aux3);
@@ -88,6 +90,7 @@ int main() {
                 ListarFrequenciaLetras(listaFrequenciaLetras, totalPalavrasCategorias, totalLetras);
                 break;
             case 3:
+                ListarFrequenciaPalavras(listaFrequenciaPalavras);
                 break;
             case 4:
                 break;

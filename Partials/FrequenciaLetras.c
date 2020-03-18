@@ -1,5 +1,3 @@
-#include <math.h>
-
 /**
  * Estrutura que guarda a quantidade de palavras com um número expecífico de letras
  * Utilizada no Ex. 3 e Ex. 5                                                           todo: João
@@ -47,61 +45,38 @@ FrequenciaLetras *InserirFrequenciaLetraOrdenada(FrequenciaLetras *listaFrequenc
 }
 
 /**
- * Função que calcula a soma a quantidade total de letras de todas as palavras do ficheiro
- * @param listaFrequenciaLetras -> lista de Frequência de Letras a somar
- * @return -> quantidade total de letras
- */
-int TotalQuantidadesLetras(FrequenciaLetras *listaFrequenciaLetras) {
-    int totalQuantidadesLetras = 0;
-    while (listaFrequenciaLetras) {
-        totalQuantidadesLetras += listaFrequenciaLetras->quantidade * listaFrequenciaLetras->numeroLetras;
-        listaFrequenciaLetras = listaFrequenciaLetras->next;
-    }
-    return totalQuantidadesLetras;
-}
-
-/**
  * Procedimento que lista as Frequêcias de Letras
+ * Lista a Frequência Absoluta, Relativa e Acumulada de cada Frequência de Letras
+ * Lista a Média, Mediana, Moda e Desvio Padrão do total de Letras das Palavras existentes no ficheiro
  * @param listaFrequenciaLetras -> lista de Frequências de Letras
  * @param totalPalavras -> total de palavras existentes no ficheiro
+ * @param totalLetras -> total de letras exixtentes no ficheiro
  */
-void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras, int totalPalavras) {
-    int frequenciaAcumulada = 0, posInicial = 0, moda = 0, modaQtd = 0, *auxMediana = NULL,
-            totalLetras = TotalQuantidadesLetras(listaFrequenciaLetras);
-    float frequenciaRelativa = 0, auxMedia = 0, mediana = 0, auxDesvioPadrao = 0;
-    auxMediana = malloc(sizeof(int) * totalPalavras);
+void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras, int totalPalavras, int totalLetras) {
+    int frequenciaAcumulada = 0, posInicial = 0, moda = 0, modaQtd = 0,
+            *auxMediana = malloc(sizeof(int) * totalPalavras);
+    float somatorioDesvios = 0;
     printf("\n\n----- LISTA DE FREQUÊNCIA DE LETRAS -----\n\n");
-    float mediaLetras = (float) totalLetras / (float) totalPalavras;
-    while (listaFrequenciaLetras) { // Moda
+    float mediaLetras = Media((float) totalLetras, (float) totalPalavras);
+    while (listaFrequenciaLetras) {
         if (modaQtd < listaFrequenciaLetras->quantidade) {
             modaQtd = listaFrequenciaLetras->quantidade;
             moda = listaFrequenciaLetras->numeroLetras;
         }
-        auxMedia += (float) listaFrequenciaLetras->numeroLetras * (float) listaFrequenciaLetras->quantidade;   //Media
         for (int i = posInicial; i < (listaFrequenciaLetras->quantidade + posInicial); i++) {
             auxMediana[i] = listaFrequenciaLetras->numeroLetras;
-            auxDesvioPadrao += quadrado((float) listaFrequenciaLetras->numeroLetras - mediaLetras);
+            somatorioDesvios += Quadrado((float) listaFrequenciaLetras->numeroLetras - mediaLetras);
         }
         posInicial += listaFrequenciaLetras->quantidade;
-        frequenciaRelativa = (((float) listaFrequenciaLetras->quantidade / (float) totalPalavras)) * 100;
+        float frequenciaRelativa = FrequenciaRelativa((float) listaFrequenciaLetras->quantidade, (float) totalPalavras);
         printf("\nNúmero de Letras: %d\n", listaFrequenciaLetras->numeroLetras);
         printf("\tFrequência Absoluta: %d\n", listaFrequenciaLetras->quantidade);
-        printf("\tFrequência Relativa: %.2f%c\n", frequenciaRelativa, '%');
+        printf("\tFrequência Relativa: %f%c\n", frequenciaRelativa, '%');
         printf("\tFrequência Acumulada: %d\n", frequenciaAcumulada += listaFrequenciaLetras->quantidade);
         listaFrequenciaLetras = listaFrequenciaLetras->next;
     }
-
-    // Calculo da mediana
-    if (totalPalavras % 2 != 0) {
-        // Numero do meio
-        mediana = (float) auxMediana[(int) (totalPalavras / 2)];
-    } else {
-        // Divisão entre os dois numeros do meio :D
-        mediana = (float) (auxMediana[(int) ((totalPalavras - 1) / 2)] + auxMediana[(int) (totalPalavras / 2)]) / 2;
-    }
-
-    printf("\nMedia: %.2f", auxMedia / (float) totalPalavras);
-    printf("\nMediana: %.2f", mediana);
+    printf("\nMedia: %.2f", Media((float) totalLetras, (float) totalPalavras));
+    printf("\nMediana: %.2f", Mediana(auxMediana, totalPalavras));
     printf("\nModa: %d", moda);
-    printf("\nDesvio Padrao: %f", sqrtf(auxDesvioPadrao / (float) totalLetras));
+    printf("\nDesvio Padrao: %f", DesvioPadrao(somatorioDesvios, (float) totalLetras));
 }

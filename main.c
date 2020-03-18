@@ -11,8 +11,7 @@
 #include "./Partials/FrequenciaCertezas.c"
 
 int main() {
-    int op = -1;
-    int palavrasCount = 0;
+    int op = -1, totalPalavrasCategorias = 0, totalLetras = 0;
     Categorias *listaCategorias = NULL;
     FrequenciaLetras *listaFrequenciaLetras = NULL;
     FrequenciaPalavras *listaFrequenciaPalavras = NULL;
@@ -62,11 +61,12 @@ int main() {
                 listaFrequenciaLetras = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras, strlen(line));
                 listaFrequenciaPalavras = InserirFrequenciaPalavras(listaFrequenciaPalavras, line);
                 listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, atof(aux4));
+                totalPalavrasCategorias++;
+                totalLetras += (int) strlen(line);
 
                 free(aux2);
                 free(aux3);
                 free(aux4);
-                palavrasCount++;
             }
         }
     }
@@ -82,10 +82,10 @@ int main() {
         scanf("%d", &op);
         switch (op) {
             case 1:
-                ListarCategorias(listaCategorias);
+                ListarCategorias(listaCategorias, totalPalavrasCategorias);
                 break;
             case 2:
-                ListarFrequenciaLetras(listaFrequenciaLetras, palavrasCount);
+                ListarFrequenciaLetras(listaFrequenciaLetras, totalPalavrasCategorias, totalLetras);
                 break;
             case 3:
                 break;

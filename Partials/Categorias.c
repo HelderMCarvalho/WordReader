@@ -1,5 +1,3 @@
-#include <math.h>
-
 /**
  * Estrutura que guarda todas as categorias, as suas quantidades e certezas acululadas
  * Guarda também todas as certezas num array de floats
@@ -96,48 +94,35 @@ InserirCategoriaOrdenada(AuxCategoriasOrdenadas *listaAuxCategoriasOrdenadas, ch
 }
 
 /**
- * Função que calcula a soma de todas as quantidades de Categorias
- * @param listaCategorias -> lista de Categorias a somar
- * @return -> quantidades de Categorias somadas
- */
-int TotalQuantidadesCategorias(Categorias *listaCategorias) {
-    int totalQuantidadesCategorias = 0;
-    while (listaCategorias) {
-        totalQuantidadesCategorias += listaCategorias->quantidade;
-        listaCategorias = listaCategorias->next;
-    }
-    return totalQuantidadesCategorias;
-}
-
-/**
  * Ex. 2 e Ex. 4
  * Procedimento que lista as Categorias ordenadas por ordem crescente de Frequência Absoluta
- * Calcula a Frequência Absoluta, Relativa e Acumulada
- * Calcula a Média e Desvio Padrão de Certeza
- * @param palavras -> lista de Palavras
+ * Lista a Frequência Absoluta, Relativa e Acumulada das Categorias
+ * Lista a Média e Desvio Padrão da Certeza das Categorias
+ * @param listaCategorias -> lista de Categorias
+ * @param totalQuantidadesCategorias -> total de ocorrências de Categorias no ficheiro (contando repetidas)
  */
-void ListarCategorias(Categorias *listaCategorias) {
+void ListarCategorias(Categorias *listaCategorias, int totalQuantidadesCategorias) {
+    int frequenciaAcumulada = 0;
     printf("\n\n----- LISTA DE CATEGORIAS -----\n\n");
     AuxCategoriasOrdenadas *listaCategoriasOrdenadas = NULL;
-    int totalQuantidadesCategorias = TotalQuantidadesCategorias(listaCategorias);
     while (listaCategorias) {
-        float frequenciaRelativa = (((float) listaCategorias->quantidade / (float) totalQuantidadesCategorias)) * 100;
-        float mediaCerteza = listaCategorias->totalCerteza / (float) listaCategorias->quantidade;
-        float auxDesvioPadrao = 0;
+        float frequenciaRelativa = FrequenciaRelativa((float) listaCategorias->quantidade,
+                                                      (float) totalQuantidadesCategorias);
+        float mediaCerteza = Media(listaCategorias->totalCerteza, (float) listaCategorias->quantidade);
+        float somatorioDesvios = 0;
         for (int i = 0; i < listaCategorias->quantidade; i++) {
-            auxDesvioPadrao += quadrado(listaCategorias->certezas[i] - mediaCerteza);
+            somatorioDesvios += Quadrado(listaCategorias->certezas[i] - mediaCerteza);
         }
-        float desvioPadrao = sqrtf(auxDesvioPadrao / (float) listaCategorias->quantidade);
+        float desvioPadrao = DesvioPadrao(somatorioDesvios, (float) listaCategorias->quantidade);
         listaCategoriasOrdenadas = InserirCategoriaOrdenada(listaCategoriasOrdenadas, listaCategorias->nome,
                                                             listaCategorias->quantidade, frequenciaRelativa,
                                                             mediaCerteza, desvioPadrao);
         listaCategorias = listaCategorias->next;
     }
-    int frequenciaAcumulada = 0;
     while (listaCategoriasOrdenadas) {
         printf("\nCategoria: %s\n", listaCategoriasOrdenadas->nome);
         printf("\tFrequência Absoluta: %d\n", listaCategoriasOrdenadas->frequenciaAbsoluta);
-        printf("\tFrequência Relativa: %.2f%c\n", listaCategoriasOrdenadas->frequenciaRelativa, '%');
+        printf("\tFrequência Relativa: %f%c\n", listaCategoriasOrdenadas->frequenciaRelativa, '%');
         printf("\tFrequência Acumulada: %d\n", frequenciaAcumulada += listaCategoriasOrdenadas->frequenciaAbsoluta);
         printf("\tMédia Certeza: %f\n", listaCategoriasOrdenadas->mediaCerteza);
         printf("\tDesvio Padrão Certeza: %f\n", listaCategoriasOrdenadas->desvioPadrao);

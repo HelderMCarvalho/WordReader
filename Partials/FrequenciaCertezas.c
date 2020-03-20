@@ -34,7 +34,7 @@ FrequenciaCertezas *InserirFrequenciaCerteza(FrequenciaCertezas *listaFrequencia
     if (aux) {
         aux->quantidade++;
     } else {
-        FrequenciaCertezas *node = MALLOC(FrequenciaCertezas);
+        FrequenciaCertezas *node = CALLOC(1, FrequenciaCertezas);
         node->certeza = certeza;
         node->quantidade = 1;
         node->next = listaFrequenciaCerteza;

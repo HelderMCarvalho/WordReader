@@ -35,7 +35,7 @@ FrequenciaPalavras *InserirFrequenciaPalavras(FrequenciaPalavras *listaFrequenci
     if (aux) {
         aux->quantidade++;
     } else {
-        FrequenciaPalavras *node = MALLOC(FrequenciaPalavras);
+        FrequenciaPalavras *node = CALLOC(1, FrequenciaPalavras);
         node->palavra = strdup(palavra);
         node->quantidade = 1;
         node->next = listaFrequenciaPalavras;
@@ -53,7 +53,7 @@ FrequenciaPalavras *InserirFrequenciaPalavras(FrequenciaPalavras *listaFrequenci
 FrequenciaPalavras *
 InserirFrequenciaPalavrasOrdenadas(FrequenciaPalavras *listaFrequenciaPalavrasOrdenada, FrequenciaPalavras *palavra) {
     if (!listaFrequenciaPalavrasOrdenada || listaFrequenciaPalavrasOrdenada->quantidade >= palavra->quantidade) {
-        FrequenciaPalavras *node = MALLOC(FrequenciaPalavras);
+        FrequenciaPalavras *node = CALLOC(1, FrequenciaPalavras);
         node->palavra = palavra->palavra;
         node->quantidade = palavra->quantidade;
         node->next = listaFrequenciaPalavrasOrdenada;
@@ -67,6 +67,7 @@ InserirFrequenciaPalavrasOrdenadas(FrequenciaPalavras *listaFrequenciaPalavrasOr
 }
 
 /**
+ * Ex. 6
  * Procedimento que lista as Frequências de Palavras ordenadas por ordem crescente de Quantidade
  * Verifica qual o Quartil ao qual uma Palavra introduzida pertence
  * @param listaFrequenciaPalavras -> lista de Frequências de Palavras
@@ -83,11 +84,14 @@ void ListarFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, Frequ
         listaFrequenciaPalavras = listaFrequenciaPalavras->next;
     }
     while (listaFrequenciaPalavrasOrdenada) {
-        quantidades = (countQuantidades == 0) ? MALLOC(int) : realloc(quantidades, sizeof(int) * countQuantidades + 1);
+        quantidades = (countQuantidades == 0) ? CALLOC(1, int) : realloc(quantidades,
+                                                                         sizeof(int) * countQuantidades + 1);
         quantidades[countQuantidades++] = listaFrequenciaPalavrasOrdenada->quantidade;
         printf("\tPalavra: %s\n", listaFrequenciaPalavrasOrdenada->palavra);
         printf("\tQuantidade: %d\n\n", listaFrequenciaPalavrasOrdenada->quantidade);
-        listaFrequenciaPalavrasOrdenada = listaFrequenciaPalavrasOrdenada->next;
+        FrequenciaPalavras *next = listaFrequenciaPalavrasOrdenada->next;
+        free(listaFrequenciaPalavrasOrdenada);
+        listaFrequenciaPalavrasOrdenada = next;
     }
     quartis = Quartis(quantidades, countQuantidades);
     for (int i = 1; i <= 3; i++) {
@@ -107,9 +111,5 @@ void ListarFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, Frequ
         printf("\n\tA Palavra introduzida está entre o Quartil 3 e o Máximo.");
     }
     free(quartis);
-
-    //todo: free quantidades
-
-    //todo: free listaFrequenciaPalavrasOrdenada
-    // Cuidado com o free da ->palavra, esta pode apontar para a palavra na variável original (do main) (verificar)
+    free(quantidades);
 }

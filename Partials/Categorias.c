@@ -52,12 +52,12 @@ Categorias *InserirCategoria(Categorias *listaCategorias, char *nome, float cert
         aux->certezas = realloc(aux->certezas, sizeof(float) * aux->quantidade);
         aux->certezas[aux->quantidade - 1] = certeza;
     } else {
-        Categorias *node = MALLOC(Categorias);
+        Categorias *node = CALLOC(1, Categorias);
         node->nome = strdup(nome);
         node->totalCerteza = certeza;
         node->quantidade = 1;
         node->certezas = NULL;
-        node->certezas = MALLOC(float);
+        node->certezas = CALLOC(1, float);
         node->certezas[0] = certeza;
         node->next = listaCategorias;
         return node;
@@ -77,7 +77,7 @@ CategoriasOrdenadas *
 InserirCategoriaOrdenada(CategoriasOrdenadas *listaAuxCategoriasOrdenadas, char *nome, int frequenciaAbsoluta,
                          float frequenciaRelativa, float mediaCerteza, float desvioPadrao) {
     if (!listaAuxCategoriasOrdenadas || listaAuxCategoriasOrdenadas->frequenciaAbsoluta >= frequenciaAbsoluta) {
-        CategoriasOrdenadas *node = MALLOC(CategoriasOrdenadas);
+        CategoriasOrdenadas *node = CALLOC(1, CategoriasOrdenadas);
         node->nome = strdup(nome);
         node->frequenciaAbsoluta = frequenciaAbsoluta;
         node->frequenciaRelativa = frequenciaRelativa;

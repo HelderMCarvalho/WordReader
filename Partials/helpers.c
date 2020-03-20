@@ -62,7 +62,7 @@ float Mediana(int *elementos, int totalElementos) {
  * @return -> array com os Quartis (Q1, Q2, Q3)
  */
 float *Quartis(const int *elementos, int totalElementos) {
-    float *quartis = calloc(3, sizeof(float));
+    float *quartis = CALLOC(3, float);
     for (int i = 1; i <= 3; i++) {
         float auxQuartil = (float) (i * (totalElementos + 1)) / 4;
         int auxQuartilInt = (int) auxQuartil;

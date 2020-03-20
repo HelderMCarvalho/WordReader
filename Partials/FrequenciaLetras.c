@@ -33,7 +33,7 @@ FrequenciaLetras *InserirFrequenciaLetraOrdenada(FrequenciaLetras *listaFrequenc
     if (aux) {
         aux->quantidade++;
     } else if (!listaFrequenciaLetras || listaFrequenciaLetras->numeroLetras >= numeroLetras) {
-        FrequenciaLetras *node = MALLOC(FrequenciaLetras);
+        FrequenciaLetras *node = CALLOC(1, FrequenciaLetras);
         node->numeroLetras = numeroLetras;
         node->quantidade = 1;
         node->next = listaFrequenciaLetras;
@@ -45,6 +45,7 @@ FrequenciaLetras *InserirFrequenciaLetraOrdenada(FrequenciaLetras *listaFrequenc
 }
 
 /**
+ * Ex. 3 e Ex. 5
  * Procedimento que lista as Frequêcias de Letras
  * Lista a Frequência Absoluta, Relativa e Acumulada de cada Frequência de Letras
  * Lista a Média, Mediana, Moda e Desvio Padrão do total de Letras das Palavras existentes no ficheiro
@@ -54,7 +55,7 @@ FrequenciaLetras *InserirFrequenciaLetraOrdenada(FrequenciaLetras *listaFrequenc
  */
 void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras, int totalPalavras, int totalLetras) {
     int frequenciaAcumulada = 0, posInicial = 0, moda = 0, modaQtd = 0,
-            *auxMediana = malloc(sizeof(int) * totalPalavras);
+            *auxMediana = calloc(totalPalavras, sizeof(int));
     float somatorioDesvios = 0;
     printf("\n\n----- LISTA DE FREQUÊNCIA DE LETRAS -----\n\n");
     float mediaLetras = Media((float) totalLetras, (float) totalPalavras);
@@ -75,10 +76,9 @@ void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras, int totalPa
         printf("\tFrequência Acumulada: %d\n", frequenciaAcumulada += listaFrequenciaLetras->quantidade);
         listaFrequenciaLetras = listaFrequenciaLetras->next;
     }
-    printf("\nMedia: %.2f", Media((float) totalLetras, (float) totalPalavras));
+    printf("\nMedia: %.2f", mediaLetras);
     printf("\nMediana: %.2f", Mediana(auxMediana, totalPalavras));
     printf("\nModa: %d", moda);
     printf("\nDesvio Padrao: %f", DesvioPadrao(somatorioDesvios, (float) totalLetras));
-
-    //todo: free auxMediana
+    free(auxMediana);
 }

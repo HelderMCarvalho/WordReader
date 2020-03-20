@@ -1,4 +1,4 @@
-#define MALLOC(tipo)   (tipo*) malloc(sizeof(tipo))
+#define CALLOC(quantidade, tipo)   (tipo*) calloc(quantidade, sizeof(tipo))
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -83,18 +83,20 @@ int main() {
         printf("\tEscolha a sua opção: ");
         scanf("%d", &op);
         switch (op) {
-            case 1:
+            case 1: {
                 ListarCategorias(listaCategorias, totalPalavrasCategorias);
                 break;
-            case 2:
+            }
+            case 2: {
                 ListarFrequenciaLetras(listaFrequenciaLetras, totalPalavrasCategorias, totalLetras);
                 break;
-            case 3:
+            }
+            case 3: {
                 printf("\n\t\tIntroduza a palavra que quer pesquisar: ");
                 char *palavra = NULL;
                 scanf("%ms", &palavra);
                 FrequenciaPalavras *palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
-                while (!palavraProcurada){
+                while (!palavraProcurada) {
                     printf("\t\t\tPalavra inexistente! Tente de novo.\n\t\tIntroduza a palavra que quer pesquisar: ");
                     scanf("%ms", &palavra);
                     palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
@@ -102,12 +104,16 @@ int main() {
                 ListarFrequenciaPalavras(listaFrequenciaPalavras, palavraProcurada);
                 free(palavra);
                 break;
-            case 4:
+            }
+            case 4: {
                 break;
-            case 0:
+            }
+            case 0: {
                 exit(1);
-            default:
-                printf("Opcao invalida");
+            }
+            default: {
+                printf("\n\tOpção inválida!");
+            }
         }
 
     } while (op != 0);

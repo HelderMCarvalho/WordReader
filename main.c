@@ -11,18 +11,44 @@
 #include "./Partials/FrequenciaCertezas.c"
 
 int main() {
-    int op = -1, totalPalavrasCategorias = 0, totalLetras = 0, tamanhoPalavra;
+    int opcaoMenu = -1, opcaoFicheiro = -1, totalPalavrasCategorias = 0, totalLetras = 0;
     Categorias *listaCategorias = NULL;
     FrequenciaLetras *listaFrequenciaLetras = NULL;
     FrequenciaPalavras *listaFrequenciaPalavras = NULL;
     FrequenciaCertezas *listaFrequenciaCertezas = NULL;
 
-    FILE *ficheiro = fopen("../Dados/mini", "r");
+    FILE *ficheiro = NULL;
+    do {
+        printf("Escolha o ficheiro que pretende analisar:");
+        printf("\n\t1 -> Pequeno (leitura instantânea) (todos os Exercícios disponíveis)");
+        printf("\n\t2 -> Médio (leitura rápida) (todos os Exercícios disponíveis)");
+        printf("\n\t3 -> Grande (leitura extremamente lenta) (Ex. 4 e Ex. 6 não disponíveis)");
+        printf("\n\tOpção: ");
+        scanf("%d", &opcaoFicheiro);
+        switch (opcaoFicheiro) {
+            case 1: {
+                ficheiro = fopen("../Dados/pequeno", "r");
+                break;
+            }
+            case 2: {
+                ficheiro = fopen("../Dados/medio", "r");
+                break;
+            }
+            case 3: {
+                ficheiro = fopen("../Dados/grande", "r");
+                break;
+            }
+            default: {
+                printf("\t\tOpção inválida!\n\n");
+            }
+        }
+    } while (opcaoFicheiro != 1 && opcaoFicheiro != 2 && opcaoFicheiro != 3);
     if (!ficheiro) {
-        printf("Não foi possível abrir o ficheiro!\n");
+        printf("\nNão foi possível abrir o ficheiro!\n");
         perror("fopen");
         exit(1);
     }
+
     while (!feof(ficheiro)) {
         char line[512];
         char *aux;
@@ -57,12 +83,15 @@ int main() {
                 *aux = '\0';
 //                printf(" | Certeza: \"%f\"", atof(aux4)); //Imprime a certeza
 
-                tamanhoPalavra = (int) strlen(line);
+                int tamanhoPalavra = (int) strlen(line);
+                float certeza = (float)atof(aux4);
 
-                listaCategorias = InserirCategoria(listaCategorias, aux3, atof(aux4));
+                listaCategorias = InserirCategoria(listaCategorias, aux3, certeza);
                 listaFrequenciaLetras = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras, tamanhoPalavra);
-                listaFrequenciaPalavras = InserirFrequenciaPalavras(listaFrequenciaPalavras, line);
-                listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, atof(aux4));
+                if (opcaoFicheiro != 3) {
+                    listaFrequenciaPalavras = InserirFrequenciaPalavras(listaFrequenciaPalavras, line);
+                    listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, certeza);
+                }
                 totalPalavrasCategorias++;
                 totalLetras += tamanhoPalavra;
 
@@ -81,8 +110,8 @@ int main() {
         printf("\t4 -> Ex. 7\n");
         printf("\t0 -> Sair\n");
         printf("\tEscolha a sua opção: ");
-        scanf("%d", &op);
-        switch (op) {
+        scanf("%d", &opcaoMenu);
+        switch (opcaoMenu) {
             case 1: {
                 ListarCategorias(listaCategorias, totalPalavrasCategorias);
                 break;
@@ -92,20 +121,30 @@ int main() {
                 break;
             }
             case 3: {
-                printf("\n\t\tIntroduza a palavra que quer pesquisar: ");
-                char *palavra = NULL;
-                scanf("%ms", &palavra);
-                FrequenciaPalavras *palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
-                while (!palavraProcurada) {
-                    printf("\t\t\tPalavra inexistente! Tente de novo.\n\t\tIntroduza a palavra que quer pesquisar: ");
+                if (opcaoFicheiro != 3) {
+                    printf("\n\t\tIntroduza a palavra que quer pesquisar: ");
+                    char *palavra = NULL;
                     scanf("%ms", &palavra);
-                    palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
+                    FrequenciaPalavras *palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
+                    while (!palavraProcurada) {
+                        printf("\t\t\tPalavra inexistente! Tente de novo.");
+                        printf("\n\t\tIntroduza a palavra que quer pesquisar: ");
+                        scanf("%ms", &palavra);
+                        palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
+                    }
+                    free(palavra);
+                    ListarFrequenciaPalavras(listaFrequenciaPalavras, palavraProcurada);
+                } else {
+                    printf("\n\t\tOpção indisponível!");
                 }
-                ListarFrequenciaPalavras(listaFrequenciaPalavras, palavraProcurada);
-                free(palavra);
                 break;
             }
             case 4: {
+                if (opcaoFicheiro != 3) {
+
+                } else {
+                    printf("\n\t\tOpção indisponível!");
+                }
                 break;
             }
             case 0: {
@@ -116,7 +155,7 @@ int main() {
             }
         }
 
-    } while (op != 0);
+    } while (opcaoMenu != 0);
 //    char s;
 //    scanf("%c", &s);
     return 0;

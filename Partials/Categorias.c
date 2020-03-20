@@ -20,7 +20,7 @@ typedef struct _auxCategoriasOrdenadas {
     int frequenciaAbsoluta;
     float frequenciaRelativa, mediaCerteza, desvioPadrao;
     struct _auxCategoriasOrdenadas *next;
-} AuxCategoriasOrdenadas;
+} CategoriasOrdenadas;
 
 /**
  * Função que procura Categorias
@@ -73,11 +73,11 @@ Categorias *InserirCategoria(Categorias *listaCategorias, char *nome, float cert
  * @param frequenciaRelativa -> Frequência Relativa a inserir
  * @return -> lista de Categorias Ordenadas atualizada
  */
-AuxCategoriasOrdenadas *
-InserirCategoriaOrdenada(AuxCategoriasOrdenadas *listaAuxCategoriasOrdenadas, char *nome, int frequenciaAbsoluta,
+CategoriasOrdenadas *
+InserirCategoriaOrdenada(CategoriasOrdenadas *listaAuxCategoriasOrdenadas, char *nome, int frequenciaAbsoluta,
                          float frequenciaRelativa, float mediaCerteza, float desvioPadrao) {
     if (!listaAuxCategoriasOrdenadas || listaAuxCategoriasOrdenadas->frequenciaAbsoluta >= frequenciaAbsoluta) {
-        AuxCategoriasOrdenadas *node = MALLOC(AuxCategoriasOrdenadas);
+        CategoriasOrdenadas *node = MALLOC(CategoriasOrdenadas);
         node->nome = strdup(nome);
         node->frequenciaAbsoluta = frequenciaAbsoluta;
         node->frequenciaRelativa = frequenciaRelativa;
@@ -104,7 +104,7 @@ InserirCategoriaOrdenada(AuxCategoriasOrdenadas *listaAuxCategoriasOrdenadas, ch
 void ListarCategorias(Categorias *listaCategorias, int totalQuantidadesCategorias) {
     int frequenciaAcumulada = 0;
     printf("\n\n----- LISTA DE CATEGORIAS -----\n\n");
-    AuxCategoriasOrdenadas *listaCategoriasOrdenadas = NULL;
+    CategoriasOrdenadas *listaCategoriasOrdenadas = NULL;
     while (listaCategorias) {
         float frequenciaRelativa = FrequenciaRelativa((float) listaCategorias->quantidade,
                                                       (float) totalQuantidadesCategorias);
@@ -126,7 +126,7 @@ void ListarCategorias(Categorias *listaCategorias, int totalQuantidadesCategoria
         printf("\tFrequência Acumulada: %d\n", frequenciaAcumulada += listaCategoriasOrdenadas->frequenciaAbsoluta);
         printf("\tMédia Certeza: %f\n", listaCategoriasOrdenadas->mediaCerteza);
         printf("\tDesvio Padrão Certeza: %f\n", listaCategoriasOrdenadas->desvioPadrao);
-        AuxCategoriasOrdenadas *next = listaCategoriasOrdenadas->next;
+        CategoriasOrdenadas *next = listaCategoriasOrdenadas->next;
         free(listaCategoriasOrdenadas->nome);
         free(listaCategoriasOrdenadas);
         listaCategoriasOrdenadas = next;

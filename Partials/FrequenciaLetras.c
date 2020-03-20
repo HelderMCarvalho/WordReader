@@ -79,4 +79,6 @@ void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras, int totalPa
     printf("\nMediana: %.2f", Mediana(auxMediana, totalPalavras));
     printf("\nModa: %d", moda);
     printf("\nDesvio Padrao: %f", DesvioPadrao(somatorioDesvios, (float) totalLetras));
+
+    //todo: free auxMediana
 }

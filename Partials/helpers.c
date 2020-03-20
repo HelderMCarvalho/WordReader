@@ -40,7 +40,7 @@ float DesvioPadrao(float somatorioDesvios, float quantidadeElementos) {
 }
 
 /**
- * Função que Calcula a Mediana
+ * Função que calcula a Mediana
  * Se o Total de Elementos for ímpar devolve o Elemento central (if)
  * Se o Total de Elementos for Par devolve a média dos 2 Elementos centrais (else)
  * @param elementos -> array de Elementos
@@ -53,4 +53,22 @@ float Mediana(int *elementos, int totalElementos) {
     } else {
         return Media((float) (elementos[(int) ((totalElementos - 1) / 2)] + elementos[(int) (totalElementos / 2)]), 2);
     }
+}
+
+/**
+ * Função que calcula os Quartis de um determinado conjunto de dados
+ * @param elementos -> array de Elementos
+ * @param totalElementos -> total de Elementos
+ * @return -> array com os Quartis (Q1, Q2, Q3)
+ */
+float *Quartis(const int *elementos, int totalElementos) {
+    float *quartis = calloc(3, sizeof(float));
+    for (int i = 1; i <= 3; i++) {
+        float auxQuartil = (float) (i * (totalElementos + 1)) / 4;
+        int auxQuartilInt = (int) auxQuartil;
+        quartis[i - 1] = (float) elementos[auxQuartilInt - 1] + (auxQuartil - (float) auxQuartilInt) *
+                                                                (float) (elementos[auxQuartilInt] -
+                                                                         elementos[auxQuartilInt - 1]);
+    }
+    return quartis;
 }

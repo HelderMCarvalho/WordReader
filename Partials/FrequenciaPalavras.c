@@ -45,14 +45,71 @@ FrequenciaPalavras *InserirFrequenciaPalavras(FrequenciaPalavras *listaFrequenci
 }
 
 /**
- * Procedimento que lista as Frequências de Palavras
- * @param listaFrequenciaPalavras -> lista de Frequências de Palavras
+ * Função que insere Frequências de Palavras ordenadas por Quantidade de forma crescente
+ * @param listaFrequenciaPalavrasOrdenada -> lista de Frequências de Palavras ordenadas existentes
+ * @param palavra -> palavra a inserir
+ * @return -> lista de Frequências de Palavras ordenadas atualizadda
  */
-void ListarFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras) {
+FrequenciaPalavras *
+InserirFrequenciaPalavrasOrdenadas(FrequenciaPalavras *listaFrequenciaPalavrasOrdenada, FrequenciaPalavras *palavra) {
+    if (!listaFrequenciaPalavrasOrdenada || listaFrequenciaPalavrasOrdenada->quantidade >= palavra->quantidade) {
+        FrequenciaPalavras *node = MALLOC(FrequenciaPalavras);
+        node->palavra = palavra->palavra;
+        node->quantidade = palavra->quantidade;
+        node->next = listaFrequenciaPalavrasOrdenada;
+        listaFrequenciaPalavrasOrdenada = node;
+    } else {
+        listaFrequenciaPalavrasOrdenada->next = InserirFrequenciaPalavrasOrdenadas(
+                listaFrequenciaPalavrasOrdenada->next,
+                palavra);
+    }
+    return listaFrequenciaPalavrasOrdenada;
+}
+
+/**
+ * Procedimento que lista as Frequências de Palavras ordenadas por ordem crescente de Quantidade
+ * Verifica qual o Quartil ao qual uma Palavra introduzida pertence
+ * @param listaFrequenciaPalavras -> lista de Frequências de Palavras
+ * @param palavraProcurada -> palavra a verificar posição de Quartil
+ */
+void ListarFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, FrequenciaPalavras *palavraProcurada) {
+    int *quantidades = NULL, countQuantidades = 0;
+    float *quartis = NULL;
     printf("\n\n----- LISTA DE FREQUÊNCIA DE PALAVRAS -----\n\n");
+    FrequenciaPalavras *listaFrequenciaPalavrasOrdenada = NULL;
     while (listaFrequenciaPalavras) {
-        printf("Palavra: %s\n", listaFrequenciaPalavras->palavra);
-        printf("Quantidade: %d\n\n", listaFrequenciaPalavras->quantidade);
+        listaFrequenciaPalavrasOrdenada = InserirFrequenciaPalavrasOrdenadas(listaFrequenciaPalavrasOrdenada,
+                                                                             listaFrequenciaPalavras);
         listaFrequenciaPalavras = listaFrequenciaPalavras->next;
     }
+    while (listaFrequenciaPalavrasOrdenada) {
+        quantidades = (countQuantidades == 0) ? MALLOC(int) : realloc(quantidades, sizeof(int) * countQuantidades + 1);
+        quantidades[countQuantidades++] = listaFrequenciaPalavrasOrdenada->quantidade;
+        printf("\tPalavra: %s\n", listaFrequenciaPalavrasOrdenada->palavra);
+        printf("\tQuantidade: %d\n\n", listaFrequenciaPalavrasOrdenada->quantidade);
+        listaFrequenciaPalavrasOrdenada = listaFrequenciaPalavrasOrdenada->next;
+    }
+    quartis = Quartis(quantidades, countQuantidades);
+    for (int i = 1; i <= 3; i++) {
+        printf("\tQuartil %d: %f\n", i, quartis[i - 1]);
+    }
+    if ((float) palavraProcurada->quantidade < quartis[0]) {
+        printf("\n\tA Palavra introduzida está entre o Mínimo e o Quartil 1.");
+    } else if ((float) palavraProcurada->quantidade == quartis[0] ||
+               (float) palavraProcurada->quantidade < quartis[1]) {
+        printf("\n\tA Palavra introduzida pertence ao Quartil 1.");
+    } else if ((float) palavraProcurada->quantidade == quartis[1]) {
+        printf("\n\tA Palavra introduzida pertence ao Quartil 2 (Mediana).");
+    } else if ((float) palavraProcurada->quantidade > quartis[1] &&
+               (float) palavraProcurada->quantidade <= quartis[2]) {
+        printf("\n\tA Palavra introduzida pertence ao Quartil 3.");
+    } else {
+        printf("\n\tA Palavra introduzida está entre o Quartil 3 e o Máximo.");
+    }
+    free(quartis);
+
+    //todo: free quantidades
+
+    //todo: free listaFrequenciaPalavrasOrdenada
+    // Cuidado com o free da ->palavra, esta pode apontar para a palavra na variável original (do main) (verificar)
 }

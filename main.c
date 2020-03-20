@@ -90,7 +90,17 @@ int main() {
                 ListarFrequenciaLetras(listaFrequenciaLetras, totalPalavrasCategorias, totalLetras);
                 break;
             case 3:
-                ListarFrequenciaPalavras(listaFrequenciaPalavras);
+                printf("\n\t\tIntroduza a palavra que quer pesquisar: ");
+                char *palavra = NULL;
+                scanf("%ms", &palavra);
+                FrequenciaPalavras *palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
+                while (!palavraProcurada){
+                    printf("\t\t\tPalavra inexistente! Tente de novo.\n\t\tIntroduza a palavra que quer pesquisar: ");
+                    scanf("%ms", &palavra);
+                    palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
+                }
+                ListarFrequenciaPalavras(listaFrequenciaPalavras, palavraProcurada);
+                free(palavra);
                 break;
             case 4:
                 break;

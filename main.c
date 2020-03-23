@@ -140,11 +140,7 @@ int main() {
                 break;
             }
             case 4: {
-                if (opcaoFicheiro != 3) {
-
-                } else {
-                    printf("\n\t\tOpção indisponível!");
-                }
+                ListarDadosHistograma(listaFrequenciaCertezas);
                 break;
             }
             case 0: {

@@ -59,21 +59,26 @@ void ListarFrequenciaCertezas(FrequenciaCertezas *listaFrequenciaCertezas) {
 
 void ListarDadosHistograma(FrequenciaCertezas *listaFrequenciaCertezas) {
 
-    float ranges[11] = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1};
+    float ranges[11] = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
     int rangeCounts[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     while (listaFrequenciaCertezas) {
-        for (int i = 0; i < 11; i++) {
 
-            //Check if in range
-            if (listaFrequenciaCertezas->certeza > ranges[i] && listaFrequenciaCertezas->certeza <= ranges[i + 1]) {
-                rangeCounts[i] += listaFrequenciaCertezas->quantidade;
-                i = 11; // stop
+        // aqui entra se a certeza for 1
+        if (listaFrequenciaCertezas->certeza == (float) 1) {
+            rangeCounts[9] += listaFrequenciaCertezas->quantidade;
+        } else {
+            for (int i = 0; i < 11; i++) {
+                //Check if in range
+                if (listaFrequenciaCertezas->certeza >= ranges[i] && listaFrequenciaCertezas->certeza < ranges[i + 1]) {
+                    rangeCounts[i] += listaFrequenciaCertezas->quantidade;
+                    break;
+                }
             }
         }
         listaFrequenciaCertezas = listaFrequenciaCertezas->next;
-    }
 
+    }
     // Output
     printf("\n______________________________");
     for (int i = 0; i < 10; i++) {

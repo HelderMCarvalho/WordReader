@@ -48,11 +48,8 @@ float DesvioPadrao(float somatorioDesvios, float quantidadeElementos) {
  * @return -> Mediana
  */
 float Mediana(int *elementos, int totalElementos) {
-    if (totalElementos % 2 != 0) {
-        return (float) elementos[(int) (totalElementos / 2)];
-    } else {
-        return Media((float) (elementos[(int) ((totalElementos - 1) / 2)] + elementos[(int) (totalElementos / 2)]), 2);
-    }
+    return (totalElementos % 2 != 0) ? (float) elementos[(int) (totalElementos / 2)] : Media(
+            (float) (elementos[(int) ((totalElementos - 1) / 2)] + elementos[(int) (totalElementos / 2)]), 2);
 }
 
 /**

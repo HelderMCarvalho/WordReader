@@ -1,6 +1,6 @@
 /**
  * Estrutura que guarda a quantidade de palavras com um número expecífico de letras
- * Utilizada no Ex. 3 e Ex. 5                                                           todo: João
+ * Utilizada no Ex. 3 e Ex. 5
  */
 typedef struct _frequenciaLetras {
     int numeroLetras, quantidade;
@@ -8,8 +8,8 @@ typedef struct _frequenciaLetras {
 } FrequenciaLetras;
 
 /**
- * Função que procura Frequencia de Letras
- * @param listaFrequenciaLetras -> lista de Frequencia Letras existente
+ * Função que procura Frequência de Letras
+ * @param listaFrequenciaLetras -> lista de Frequência Letras existente
  * @param numeroLetras -> número de letras a encontrar
  * @return -> FrequenciaLetras caso encontre || NULL caso não encontre
  */
@@ -23,10 +23,10 @@ FrequenciaLetras *ProcurarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetr
 }
 
 /**
- * Função que insere/atualiza Frequencia de Letras
- * @param listaFrequenciaLetras -> lista de Frequencia de Letras existentes
+ * Função que insere/atualiza Frequência de Letras
+ * @param listaFrequenciaLetras -> lista de Frequência de Letras existentes
  * @param numeroLetras -> numero de letras a inserir/atualizar
- * @return -> lista de Frequencia de Letras atualizada
+ * @return -> lista de Frequência de Letras atualizada
  */
 FrequenciaLetras *InserirFrequenciaLetraOrdenada(FrequenciaLetras *listaFrequenciaLetras, int numeroLetras) {
     FrequenciaLetras *aux = ProcurarFrequenciaLetras(listaFrequenciaLetras, numeroLetras);
@@ -46,12 +46,12 @@ FrequenciaLetras *InserirFrequenciaLetraOrdenada(FrequenciaLetras *listaFrequenc
 
 /**
  * Ex. 3 e Ex. 5
- * Procedimento que lista as Frequêcias de Letras
+ * Procedimento que lista as Frequências de Letras
  * Lista a Frequência Absoluta, Relativa e Acumulada de cada Frequência de Letras
  * Lista a Média, Mediana, Moda e Desvio Padrão do total de Letras das Palavras existentes no ficheiro
  * @param listaFrequenciaLetras -> lista de Frequências de Letras
  * @param totalPalavras -> total de palavras existentes no ficheiro
- * @param totalLetras -> total de letras exixtentes no ficheiro
+ * @param totalLetras -> total de letras existentes no ficheiro
  */
 void ListarFrequenciaLetras(FrequenciaLetras *listaFrequenciaLetras, int totalPalavras, int totalLetras) {
     int frequenciaAcumulada = 0, posInicial = 0, moda = 0, modaQtd = 0,

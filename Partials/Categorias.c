@@ -1,7 +1,7 @@
 /**
- * Estrutura que guarda todas as categorias, as suas quantidades e certezas acululadas
+ * Estrutura que guarda todas as categorias, as suas quantidades e certezas acumuladas
  * Guarda também todas as certezas num array de floats
- * Utilizada para o Ex. 2 e Ex. 4                                                       todo: Helder
+ * Utilizada para o Ex. 2 e Ex. 4
  */
 typedef struct _categorias {
     char *nome;
@@ -39,7 +39,7 @@ Categorias *ProcurarCategoria(Categorias *listaCategorias, char *nome) {
 
 /**
  * Função que insere/atualiza uma Categoria
- * @param listaCategorias -> ista de Categorias existentes
+ * @param listaCategorias -> lista de Categorias existentes
  * @param nome -> nome da Categoria a inserir/atualizar
  * @param certeza -> certeza da Categoria a inserir/somar
  * @return -> lista de Categorias atualizada
@@ -66,7 +66,7 @@ Categorias *InserirCategoria(Categorias *listaCategorias, char *nome, float cert
 }
 
 /**
- * Função que insere Categorias ordenadas por Freqência Absoluta de forma crescente
+ * Função que insere Categorias ordenadas por Frequência Absoluta de forma crescente
  * @param listaAuxCategoriasOrdenadas -> lista de Categorias ordenadas existentes
  * @param nome -> nome a inserir
  * @param frequenciaAbsoluta -> Frequência Absoluta a inserir

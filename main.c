@@ -16,14 +16,14 @@ int main() {
     Categorias *listaCategorias = NULL;
     FrequenciaLetras *listaFrequenciaLetras = NULL;
     FrequenciaPalavrasTree *frequenciaPalavrasTree = NULL;
-    FrequenciaCertezas *listaFrequenciaCertezas = NULL;
+    FrequenciaCertezasTree *frequenciaCertezasTree=NULL;
     FILE *ficheiro = NULL;
     do {
 //        clear();
         printf("\nEscolha o ficheiro que pretende analisar:");
-        printf("\n\t1 -> Pequeno (leitura instantânea) (todos os Exercícios disponíveis)");
-        printf("\n\t2 -> Médio (leitura rápida) (todos os Exercícios disponíveis)");
-        printf("\n\t3 -> Grande (leitura extremamente lenta) (Ex. 4 e Ex. 6 não disponíveis)");
+        printf("\n\t1 -> Pequeno (440 bytes)");
+        printf("\n\t2 -> Médio (3.3 MB)");
+        printf("\n\t3 -> Grande (93.7 MB)");
         printf("\n\tOpção: ");
         scanf("%d", &opcaoFicheiro);
         switch (opcaoFicheiro) {
@@ -90,9 +90,7 @@ int main() {
                 listaCategorias = InserirCategoria(listaCategorias, aux3, certeza);
                 listaFrequenciaLetras = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras, tamanhoPalavra);
                 frequenciaPalavrasTree = InserirFrequenciaPalavrasTree(frequenciaPalavrasTree, line);
-                if (opcaoFicheiro != 3) {
-                    listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, certeza);
-                }
+                frequenciaCertezasTree=InserirFrequenciaCertezaTree(frequenciaCertezasTree, certeza);
                 totalPalavrasCategorias++;
                 totalLetras += tamanhoPalavra;
 
@@ -104,13 +102,14 @@ int main() {
     }
 
     do {
-        printf("\n\n\t ----- MENU -----\n\n");
-        printf("\t1 -> Ex. 2 e 4\n");
-        printf("\t2 -> Ex. 3 e 5\n");
-        printf("\t3 -> Ex. 6\n");
-        printf("\t4 -> Ex. 7\n");
-        printf("\t0 -> Sair\n");
-        printf("\tEscolha a sua opção: ");
+        printf("\n\n----- MENU -----");
+        printf("\nEscolha a sua opção:");
+        printf("\n\t1 -> Ex. 2 e 4");
+        printf("\n\t2 -> Ex. 3 e 5");
+        printf("\n\t3 -> Ex. 6");
+        printf("\n\t4 -> Ex. 7");
+        printf("\n\t0 -> Sair");
+        printf("\n\tOpção: ");
         scanf("%d", &opcaoMenu);
         switch (opcaoMenu) {
             case 1: {
@@ -138,7 +137,7 @@ int main() {
                 break;
             }
             case 4: {
-                ListarDadosHistograma(listaFrequenciaCertezas);
+                ListarFrequenciaCertezas(frequenciaCertezasTree);
                 break;
             }
             case 0: {
@@ -146,6 +145,7 @@ int main() {
             }
             default: {
                 printf("\n\tOpção inválida!");
+                break;
             }
         }
     } while (opcaoMenu != 0);

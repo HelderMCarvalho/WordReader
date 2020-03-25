@@ -25,9 +25,8 @@ typedef struct _frequenciaPalavrasTree {
  * @param palavra -> palavra a inserir
  * @return -> lista de Frequências de Palavras ordenadas atualizada
  */
-FrequenciaPalavras *
-InserirFrequenciaPalavrasOrdenadas(FrequenciaPalavras *listaFrequenciaPalavrasOrdenada,
-                                   FrequenciaPalavrasTree *palavra) {
+FrequenciaPalavras *InserirFrequenciaPalavrasOrdenadas(FrequenciaPalavras *listaFrequenciaPalavrasOrdenada,
+                                                       FrequenciaPalavrasTree *palavra) {
     if (!listaFrequenciaPalavrasOrdenada || listaFrequenciaPalavrasOrdenada->quantidade >= palavra->quantidade) {
         FrequenciaPalavras *node = CALLOC(1, FrequenciaPalavras);
         node->palavra = palavra->palavra;
@@ -36,14 +35,13 @@ InserirFrequenciaPalavrasOrdenadas(FrequenciaPalavras *listaFrequenciaPalavrasOr
         listaFrequenciaPalavrasOrdenada = node;
     } else {
         listaFrequenciaPalavrasOrdenada->next = InserirFrequenciaPalavrasOrdenadas(
-                listaFrequenciaPalavrasOrdenada->next,
-                palavra);
+                listaFrequenciaPalavrasOrdenada->next, palavra);
     }
     return listaFrequenciaPalavrasOrdenada;
 }
 
 /**
- * Função que insere Freqências de Palavras ordenadas por ordem alfabética de A a Z
+ * Função que insere Frequências de Palavras ordenadas por ordem alfabética de A a Z
  * Sempre que encontra uma palavra duplicada aumenta a sua quantidade
  * @param frequenciaPalavrasTree -> árvore de Frequências de Palavras
  * @param palavra -> palavra a inserir
@@ -93,15 +91,15 @@ FrequenciaPalavrasTree *ProcurarFrequenciaPalavrasTree(FrequenciaPalavrasTree *f
  * @param listaFrequenciaPalavrasOrdenada -> lista de Frequências de Palavras ordenadas
  * @return -> lista de Frequências de Palavras ordenadas atualizada
  */
-FrequenciaPalavras *CriarListaOrdenada(FrequenciaPalavrasTree *frequenciaPalavrasTree,
-                                       FrequenciaPalavras *listaFrequenciaPalavrasOrdenada) {
+FrequenciaPalavras *CriarListaFrequenciaPalavrasOrdenada(FrequenciaPalavrasTree *frequenciaPalavrasTree,
+                                                         FrequenciaPalavras *listaFrequenciaPalavrasOrdenada) {
     if (frequenciaPalavrasTree) {
+        listaFrequenciaPalavrasOrdenada = CriarListaFrequenciaPalavrasOrdenada(frequenciaPalavrasTree->left,
+                                                                               listaFrequenciaPalavrasOrdenada);
         listaFrequenciaPalavrasOrdenada = InserirFrequenciaPalavrasOrdenadas(listaFrequenciaPalavrasOrdenada,
                                                                              frequenciaPalavrasTree);
-        listaFrequenciaPalavrasOrdenada = CriarListaOrdenada(frequenciaPalavrasTree->left,
-                                                             listaFrequenciaPalavrasOrdenada);
-        listaFrequenciaPalavrasOrdenada = CriarListaOrdenada(frequenciaPalavrasTree->right,
-                                                             listaFrequenciaPalavrasOrdenada);
+        listaFrequenciaPalavrasOrdenada = CriarListaFrequenciaPalavrasOrdenada(frequenciaPalavrasTree->right,
+                                                                               listaFrequenciaPalavrasOrdenada);
     }
     return listaFrequenciaPalavrasOrdenada;
 }
@@ -117,9 +115,10 @@ void
 ListarFrequenciaPalavras(FrequenciaPalavrasTree *frequenciaPalavrasTree, FrequenciaPalavrasTree *palavraProcurada) {
     int *quantidades = NULL, countQuantidades = 0;
     float *quartis = NULL;
-    printf("\n\n----- LISTA DE FREQUÊNCIA DE PALAVRAS -----\n\n");
     FrequenciaPalavras *listaFrequenciaPalavrasOrdenada = NULL;
-    listaFrequenciaPalavrasOrdenada = CriarListaOrdenada(frequenciaPalavrasTree, listaFrequenciaPalavrasOrdenada);
+    listaFrequenciaPalavrasOrdenada = CriarListaFrequenciaPalavrasOrdenada(frequenciaPalavrasTree,
+                                                                           listaFrequenciaPalavrasOrdenada);
+    printf("\n\n----- LISTA DE FREQUÊNCIA DE PALAVRAS -----\n\n");
     while (listaFrequenciaPalavrasOrdenada) {
         quantidades = (countQuantidades == 0) ? CALLOC(1, int) : realloc(quantidades,
                                                                          sizeof(int) * countQuantidades + 1);

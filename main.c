@@ -1,4 +1,5 @@
-#define CALLOC(quantidade, tipo)   (tipo*) calloc(quantidade, sizeof(tipo))
+#define CALLOC(quantidade, tipo)    (tipo*) calloc(quantidade, sizeof(tipo))
+#define clear()     printf("\e[1;1H\e[2J")
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,12 +15,12 @@ int main() {
     int opcaoMenu = -1, opcaoFicheiro = -1, totalPalavrasCategorias = 0, totalLetras = 0;
     Categorias *listaCategorias = NULL;
     FrequenciaLetras *listaFrequenciaLetras = NULL;
-    FrequenciaPalavras *listaFrequenciaPalavras = NULL;
+    FrequenciaPalavrasTree *frequenciaPalavrasTree = NULL;
     FrequenciaCertezas *listaFrequenciaCertezas = NULL;
-
     FILE *ficheiro = NULL;
     do {
-        printf("Escolha o ficheiro que pretende analisar:");
+//        clear();
+        printf("\nEscolha o ficheiro que pretende analisar:");
         printf("\n\t1 -> Pequeno (leitura instantânea) (todos os Exercícios disponíveis)");
         printf("\n\t2 -> Médio (leitura rápida) (todos os Exercícios disponíveis)");
         printf("\n\t3 -> Grande (leitura extremamente lenta) (Ex. 4 e Ex. 6 não disponíveis)");
@@ -84,12 +85,12 @@ int main() {
 //                printf(" | Certeza: \"%f\"", atof(aux4)); //Imprime a certeza
 
                 int tamanhoPalavra = (int) strlen(line);
-                float certeza = (float)atof(aux4);
+                float certeza = (float) atof(aux4);
 
                 listaCategorias = InserirCategoria(listaCategorias, aux3, certeza);
                 listaFrequenciaLetras = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras, tamanhoPalavra);
+                frequenciaPalavrasTree = InserirFrequenciaPalavrasTree(frequenciaPalavrasTree, line);
                 if (opcaoFicheiro != 3) {
-                    listaFrequenciaPalavras = InserirFrequenciaPalavras(listaFrequenciaPalavras, line);
                     listaFrequenciaCertezas = InserirFrequenciaCerteza(listaFrequenciaCertezas, certeza);
                 }
                 totalPalavrasCategorias++;
@@ -103,7 +104,7 @@ int main() {
     }
 
     do {
-        printf("\n\n ----- MENU -----\n\n");
+        printf("\n\n\t ----- MENU -----\n\n");
         printf("\t1 -> Ex. 2 e 4\n");
         printf("\t2 -> Ex. 3 e 5\n");
         printf("\t3 -> Ex. 6\n");
@@ -121,22 +122,19 @@ int main() {
                 break;
             }
             case 3: {
-                if (opcaoFicheiro != 3) {
+                printf("\n\t\tIntroduza a palavra que quer pesquisar: ");
+                char *palavra = NULL;
+                scanf("%ms", &palavra);
+                FrequenciaPalavrasTree *palavraProcurada = ProcurarFrequenciaPalavrasTree(frequenciaPalavrasTree,
+                                                                                          palavra);
+                while (!palavraProcurada) {
+                    printf("\t\t\tPalavra inexistente! Tente de novo.");
                     printf("\n\t\tIntroduza a palavra que quer pesquisar: ");
-                    char *palavra = NULL;
                     scanf("%ms", &palavra);
-                    FrequenciaPalavras *palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
-                    while (!palavraProcurada) {
-                        printf("\t\t\tPalavra inexistente! Tente de novo.");
-                        printf("\n\t\tIntroduza a palavra que quer pesquisar: ");
-                        scanf("%ms", &palavra);
-                        palavraProcurada = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
-                    }
-                    free(palavra);
-                    ListarFrequenciaPalavras(listaFrequenciaPalavras, palavraProcurada);
-                } else {
-                    printf("\n\t\tOpção indisponível!");
+                    palavraProcurada = ProcurarFrequenciaPalavrasTree(frequenciaPalavrasTree, palavra);
                 }
+                free(palavra);
+                ListarFrequenciaPalavras(frequenciaPalavrasTree, palavraProcurada);
                 break;
             }
             case 4: {
@@ -150,7 +148,6 @@ int main() {
                 printf("\n\tOpção inválida!");
             }
         }
-
     } while (opcaoMenu != 0);
 //    char s;
 //    scanf("%c", &s);

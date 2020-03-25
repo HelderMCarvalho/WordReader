@@ -1,6 +1,7 @@
 /**
- * Estrutura que guarda o número de ocorrências de cada palavra
- * Utilizada no Ex. 6                                                                   todo: Helder
+ * Estrutura (lista) que guarda o número de ocorrências de cada palavra
+ * Utilizada para as guardar ordenadas por ordem crescente de quantidade
+ * Utilizada no Ex. 6
  */
 typedef struct _frequenciaPalavras {
     char *palavra;
@@ -9,49 +10,24 @@ typedef struct _frequenciaPalavras {
 } FrequenciaPalavras;
 
 /**
- * Função que procura Frequencia de Palavras
- * @param listaFrequenciaPalavras -> lista de Frequencia Palavras existente
- * @param palavra -> palavra a encontrar
- * @return -> FrequenciaPalavras caso encontre || NULL caso não encontre
+ * Estrutura (árvore) que guarda o número de ocorrências de cada palavra ordenadas por ordem alfabética de A a Z
+ * Utilizada para melhorar o desempenho da leitura do ficheiro
  */
-FrequenciaPalavras *
-ProcurarFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, char *palavra) {
-    if (!listaFrequenciaPalavras) {
-        return NULL;
-    } else if (strcmp(palavra, listaFrequenciaPalavras->palavra) == 0) { //todo: comparação demora muuuuuuuuuito
-        return listaFrequenciaPalavras;
-    }
-    return ProcurarFrequenciaPalavras(listaFrequenciaPalavras->next, palavra);
-}
+typedef struct _frequenciaPalavrasTree {
+    char *palavra;
+    int quantidade;
+    struct _frequenciaPalavrasTree *left, *right;
+} FrequenciaPalavrasTree;
 
 /**
- * Função que insere/atualiza Frequencia de Palavras
- * @param listaFrequenciaPalavras -> lista de Frequencia de Palavras existentes
- * @param palavra -> palavra a inserir/atualizar
- * @return -> lista de Frequencia de Palavras atualizada
- */
-FrequenciaPalavras *InserirFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, char *palavra) {
-    FrequenciaPalavras *aux = ProcurarFrequenciaPalavras(listaFrequenciaPalavras, palavra);
-    if (aux) {
-        aux->quantidade++;
-    } else {
-        FrequenciaPalavras *node = CALLOC(1, FrequenciaPalavras);
-        node->palavra = strdup(palavra);
-        node->quantidade = 1;
-        node->next = listaFrequenciaPalavras;
-        return node;
-    }
-    return listaFrequenciaPalavras;
-}
-
-/**
- * Função que insere Frequências de Palavras ordenadas por Quantidade de forma crescente
+ * Função que insere Frequências de Palavras ordenadas por ordem crescente de Quantidade
  * @param listaFrequenciaPalavrasOrdenada -> lista de Frequências de Palavras ordenadas existentes
  * @param palavra -> palavra a inserir
- * @return -> lista de Frequências de Palavras ordenadas atualizadda
+ * @return -> lista de Frequências de Palavras ordenadas atualizada
  */
 FrequenciaPalavras *
-InserirFrequenciaPalavrasOrdenadas(FrequenciaPalavras *listaFrequenciaPalavrasOrdenada, FrequenciaPalavras *palavra) {
+InserirFrequenciaPalavrasOrdenadas(FrequenciaPalavras *listaFrequenciaPalavrasOrdenada,
+                                   FrequenciaPalavrasTree *palavra) {
     if (!listaFrequenciaPalavrasOrdenada || listaFrequenciaPalavrasOrdenada->quantidade >= palavra->quantidade) {
         FrequenciaPalavras *node = CALLOC(1, FrequenciaPalavras);
         node->palavra = palavra->palavra;
@@ -67,22 +43,83 @@ InserirFrequenciaPalavrasOrdenadas(FrequenciaPalavras *listaFrequenciaPalavrasOr
 }
 
 /**
+ * Função que insere Freqências de Palavras ordenadas por ordem alfabética de A a Z
+ * Sempre que encontra uma palavra duplicada aumenta a sua quantidade
+ * @param frequenciaPalavrasTree -> árvore de Frequências de Palavras
+ * @param palavra -> palavra a inserir
+ * @return -> árvore de Frequência de Palavras atualizada
+ */
+FrequenciaPalavrasTree *InserirFrequenciaPalavrasTree(FrequenciaPalavrasTree *frequenciaPalavrasTree, char *palavra) {
+    if (frequenciaPalavrasTree) {
+        if (strcmp(palavra, frequenciaPalavrasTree->palavra) < 0) {
+            frequenciaPalavrasTree->left = InserirFrequenciaPalavrasTree(frequenciaPalavrasTree->left, palavra);
+        } else if (strcmp(palavra, frequenciaPalavrasTree->palavra) > 0) {
+            frequenciaPalavrasTree->right = InserirFrequenciaPalavrasTree(frequenciaPalavrasTree->right, palavra);
+        } else if (strcmp(palavra, frequenciaPalavrasTree->palavra) == 0) {
+            frequenciaPalavrasTree->quantidade++;
+        }
+    } else {
+        frequenciaPalavrasTree = CALLOC(1, FrequenciaPalavrasTree);
+        frequenciaPalavrasTree->palavra = strdup(palavra);
+        frequenciaPalavrasTree->quantidade = 1;
+        frequenciaPalavrasTree->left = frequenciaPalavrasTree->right = NULL;
+    }
+    return frequenciaPalavrasTree;
+}
+
+/**
+ * Função que procura uma Frequência de Palavra
+ * @param frequenciaPalavrasTree -> árvore de Frequências de Palavras
+ * @param palavra -> palavra a procurar
+ * @return -> NULL se não encontrar a palavra | frequenciaPalavrasTree se encontrar a palavra
+ */
+FrequenciaPalavrasTree *ProcurarFrequenciaPalavrasTree(FrequenciaPalavrasTree *frequenciaPalavrasTree, char *palavra) {
+    if (frequenciaPalavrasTree) {
+        if (strcmp(palavra, frequenciaPalavrasTree->palavra) < 0) {
+            return ProcurarFrequenciaPalavrasTree(frequenciaPalavrasTree->left, palavra);
+        } else if (strcmp(palavra, frequenciaPalavrasTree->palavra) > 0) {
+            return ProcurarFrequenciaPalavrasTree(frequenciaPalavrasTree->right, palavra);
+        } else {
+            return frequenciaPalavrasTree;
+        }
+    } else {
+        return NULL;
+    }
+}
+
+/**
+ * Função que cria uma lista de Frequências de Palavras Palavras ordenadas por ordem crescente de Quantidade
+ * @param frequenciaPalavrasTree -> árvore de Frequências de Palavras
+ * @param listaFrequenciaPalavrasOrdenada -> lista de Frequências de Palavras ordenadas
+ * @return -> lista de Frequências de Palavras ordenadas atualizada
+ */
+FrequenciaPalavras *CriarListaOrdenada(FrequenciaPalavrasTree *frequenciaPalavrasTree,
+                                       FrequenciaPalavras *listaFrequenciaPalavrasOrdenada) {
+    if (frequenciaPalavrasTree) {
+        listaFrequenciaPalavrasOrdenada = InserirFrequenciaPalavrasOrdenadas(listaFrequenciaPalavrasOrdenada,
+                                                                             frequenciaPalavrasTree);
+        listaFrequenciaPalavrasOrdenada = CriarListaOrdenada(frequenciaPalavrasTree->left,
+                                                             listaFrequenciaPalavrasOrdenada);
+        listaFrequenciaPalavrasOrdenada = CriarListaOrdenada(frequenciaPalavrasTree->right,
+                                                             listaFrequenciaPalavrasOrdenada);
+    }
+    return listaFrequenciaPalavrasOrdenada;
+}
+
+/**
  * Ex. 6
  * Procedimento que lista as Frequências de Palavras ordenadas por ordem crescente de Quantidade
  * Verifica qual o Quartil ao qual uma Palavra introduzida pertence
- * @param listaFrequenciaPalavras -> lista de Frequências de Palavras
+ * @param frequenciaPalavrasTree -> árvore de Frequências de Palavras
  * @param palavraProcurada -> palavra a verificar posição de Quartil
  */
-void ListarFrequenciaPalavras(FrequenciaPalavras *listaFrequenciaPalavras, FrequenciaPalavras *palavraProcurada) {
+void
+ListarFrequenciaPalavras(FrequenciaPalavrasTree *frequenciaPalavrasTree, FrequenciaPalavrasTree *palavraProcurada) {
     int *quantidades = NULL, countQuantidades = 0;
     float *quartis = NULL;
     printf("\n\n----- LISTA DE FREQUÊNCIA DE PALAVRAS -----\n\n");
     FrequenciaPalavras *listaFrequenciaPalavrasOrdenada = NULL;
-    while (listaFrequenciaPalavras) {
-        listaFrequenciaPalavrasOrdenada = InserirFrequenciaPalavrasOrdenadas(listaFrequenciaPalavrasOrdenada,
-                                                                             listaFrequenciaPalavras);
-        listaFrequenciaPalavras = listaFrequenciaPalavras->next;
-    }
+    listaFrequenciaPalavrasOrdenada = CriarListaOrdenada(frequenciaPalavrasTree, listaFrequenciaPalavrasOrdenada);
     while (listaFrequenciaPalavrasOrdenada) {
         quantidades = (countQuantidades == 0) ? CALLOC(1, int) : realloc(quantidades,
                                                                          sizeof(int) * countQuantidades + 1);

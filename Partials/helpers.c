@@ -1,4 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include <math.h>
+#include "./Headers/helpers.h"
+
+#define CALLOC(quantidade, tipo)    (tipo*) calloc(quantidade, sizeof(tipo))
 
 /**
  * Função que calcula o Quadrado de um número

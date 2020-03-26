@@ -1,11 +1,11 @@
-/**
- * Estrutura que guarda a quantidade de palavras com um número expecífico de letras
- * Utilizada no Ex. 3 e Ex. 5
- */
-typedef struct _frequenciaLetras {
-    int numeroLetras, quantidade;
-    struct _frequenciaLetras *next;
-} FrequenciaLetras;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "./Headers/FrequenciaLetras.h"
+#include "./Headers/helpers.h"
+
+#define CALLOC(quantidade, tipo)    (tipo*) calloc(quantidade, sizeof(tipo))
 
 /**
  * Função que procura Frequência de Letras

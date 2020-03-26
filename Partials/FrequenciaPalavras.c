@@ -1,23 +1,11 @@
-/**
- * Estrutura (lista) que guarda o número de ocorrências de cada palavra
- * Utilizada para as guardar ordenadas por ordem crescente de quantidade
- * Utilizada no Ex. 6
- */
-typedef struct _frequenciaPalavras {
-    char *palavra;
-    int quantidade;
-    struct _frequenciaPalavras *next;
-} FrequenciaPalavras;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "./Headers/FrequenciaPalavras.h"
+#include "./Headers/helpers.h"
 
-/**
- * Estrutura (árvore) que guarda o número de ocorrências de cada palavra ordenadas por ordem alfabética de A a Z
- * Utilizada para melhorar o desempenho da leitura do ficheiro
- */
-typedef struct _frequenciaPalavrasTree {
-    char *palavra;
-    int quantidade;
-    struct _frequenciaPalavrasTree *left, *right;
-} FrequenciaPalavrasTree;
+#define CALLOC(quantidade, tipo)    (tipo*) calloc(quantidade, sizeof(tipo))
 
 /**
  * Função que insere Frequências de Palavras ordenadas por ordem crescente de Quantidade

@@ -1,22 +1,22 @@
-#define CALLOC(quantidade, tipo)    (tipo*) calloc(quantidade, sizeof(tipo))
-#define clear()     printf("\e[1;1H\e[2J")
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "./Partials/helpers.c"
-#include "./Partials/Categorias.c"
-#include "./Partials/FrequenciaLetras.c"
-#include "./Partials/FrequenciaPalavras.c"
-#include "./Partials/FrequenciaCertezas.c"
+#include "./Partials/Headers/helpers.h"
+#include "./Partials/Headers/Categorias.h"
+#include "./Partials/Headers/FrequenciaLetras.h"
+#include "./Partials/Headers/FrequenciaPalavras.h"
+#include "./Partials/Headers/FrequenciaCertezas.h"
+
+#define CALLOC(quantidade, tipo)    (tipo*) calloc(quantidade, sizeof(tipo))
+#define clear()     printf("\e[1;1H\e[2J")
 
 int main() {
     int opcaoMenu = -1, opcaoFicheiro = -1, totalPalavrasCategorias = 0, totalLetras = 0;
     Categorias *listaCategorias = NULL;
     FrequenciaLetras *listaFrequenciaLetras = NULL;
     FrequenciaPalavrasTree *frequenciaPalavrasTree = NULL;
-    FrequenciaCertezasTree *frequenciaCertezasTree=NULL;
+    FrequenciaCertezasTree *frequenciaCertezasTree = NULL;
     FILE *ficheiro = NULL;
     do {
 //        clear();
@@ -28,15 +28,15 @@ int main() {
         scanf("%d", &opcaoFicheiro);
         switch (opcaoFicheiro) {
             case 1: {
-                ficheiro = fopen("../Dados/pequeno", "r");
+                ficheiro = fopen("./Dados/pequeno", "r");
                 break;
             }
             case 2: {
-                ficheiro = fopen("../Dados/medio", "r");
+                ficheiro = fopen("./Dados/medio", "r");
                 break;
             }
             case 3: {
-                ficheiro = fopen("../Dados/grande", "r");
+                ficheiro = fopen("./Dados/grande", "r");
                 break;
             }
             default: {
@@ -49,7 +49,6 @@ int main() {
         perror("fopen");
         exit(1);
     }
-
     while (!feof(ficheiro)) {
         char line[512];
         char *aux;
@@ -90,7 +89,7 @@ int main() {
                 listaCategorias = InserirCategoria(listaCategorias, aux3, certeza);
                 listaFrequenciaLetras = InserirFrequenciaLetraOrdenada(listaFrequenciaLetras, tamanhoPalavra);
                 frequenciaPalavrasTree = InserirFrequenciaPalavrasTree(frequenciaPalavrasTree, line);
-                frequenciaCertezasTree=InserirFrequenciaCertezaTree(frequenciaCertezasTree, certeza);
+                frequenciaCertezasTree = InserirFrequenciaCertezaTree(frequenciaCertezasTree, certeza);
                 totalPalavrasCategorias++;
                 totalLetras += tamanhoPalavra;
 
@@ -100,7 +99,6 @@ int main() {
             }
         }
     }
-
     do {
         printf("\n\n----- MENU -----");
         printf("\nEscolha a sua opção:");

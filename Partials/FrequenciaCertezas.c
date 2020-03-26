@@ -1,22 +1,11 @@
-/**
- * Estrutura (lista) que guarda o número de ocorrências de cada certeza
- * Utilizada no Ex. 7
- */
-typedef struct _frequenciaCerteza {
-    float certeza;
-    int quantidade;
-    struct _frequenciaCerteza *next;
-} FrequenciaCertezas;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "./Headers/FrequenciaCertezas.h"
+#include "./Headers/helpers.h"
 
-/**
- * Estrutura (árvore) que guarda o número de ocorrências de cada certeza ordenadas por ordem alfabética crescente
- * Utilizada para melhorar o desempenho da leitura do ficheiro
- */
-typedef struct _frequenciaCertezaTree {
-    float certeza;
-    int quantidade;
-    struct _frequenciaCertezaTree *left, *right;
-} FrequenciaCertezasTree;
+#define CALLOC(quantidade, tipo)    (tipo*) calloc(quantidade, sizeof(tipo))
 
 /**
  * Função que insere Frequência de Certezas

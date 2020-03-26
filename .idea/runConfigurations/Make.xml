@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Make Consola" type="ShConfigurationType">
+  <configuration default="false" name="Make" type="ShConfigurationType">
     <option name="SCRIPT_PATH" value="$PROJECT_DIR$/make.sh" />
     <option name="SCRIPT_OPTIONS" value="" />
     <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />

@@ -17,4 +17,5 @@ all: ./Objects/main.o ./Objects/helpers.o ./Objects/FrequenciaPalavras.o ./Objec
 	gcc -c -lm ./Partials/helpers.c -o ./Objects/helpers.o
 
 ./Objects/main.o: main.c
+	mkdir -p Objects
 	gcc -c -lm main.c -o ./Objects/main.o

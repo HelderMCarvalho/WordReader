@@ -3,8 +3,11 @@
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
   <component name="CidrRootsConfiguration">
     <sourceRoots>
-      <file path="$PROJECT_DIR$/Partials/Headers" />
+      <file path="$PROJECT_DIR$/Partials" />
     </sourceRoots>
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/Partials/Headers" />
+    </excludeRoots>
   </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />

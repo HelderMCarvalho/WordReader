@@ -1,4 +1,4 @@
-# TP1_AEDII
+# WordReader
 Read file with information about words and calculate statistical information about them.
 
 ## Usage
